@@ -1,0 +1,31 @@
+name: Python_Web_Development
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.12
+  - fastapi
+  - uvicorn
+  - python-dotenv
+  - pydantic
+
+
+# 환경 생성
+
+# conda env create -f environment.yml
+
+# conda env update -f environment.yml
+# 개별 패키지 설치
+# conda install -c conda-forge python-dotenv pyyaml
+
+# conda activate Python_Web_Development
+
+# conda deactivate
+
+# conda env list
+
+# conda env remove -n Python_Web_Development
+
+# conda config --show envs_dirs
+
+# python --version
