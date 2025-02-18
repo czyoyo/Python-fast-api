@@ -8,6 +8,16 @@ dependencies:
   - uvicorn
   - python-dotenv
   - pydantic
+  - sqlalchemy        # DB ORM을 위한 패키지
+#  - pydantic-settings # 설정 관리를 위한 패키지
+#  - python-jose      # JWT 토큰 생성 및 검증
+#  - passlib         # 비밀번호 해싱
+#  - bcrypt          # 비밀번호 암호화 알고리즘
+#  - python-multipart # form-data 처리
+#  - email-validator # 이메일 유효성 검사
+#pip:
+#  - python-jose[cryptography]  # JWT 암호화를 위한 추가 기능
+
 
 
 # 환경 생성
