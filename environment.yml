@@ -13,6 +13,8 @@ dependencies:
 #  - pydantic-settings # 설정 관리를 위한 패키지
   - passlib         # 비밀번호 해싱 (bcrypt 와 함께 사용)
   - bcrypt          # 비밀번호 암호화 알고리즘 (passlib 와 함께 사용)
+  - email-validator
+  - python-multipart
 #  - python-multipart # form-data 처리
 #  - email-validator # 이메일 유효성 검사
 #pip:
