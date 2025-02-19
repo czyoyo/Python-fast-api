@@ -1,33 +1,30 @@
-from datetime import datetime
-from typing import List, Union, Optional
 from fastapi import FastAPI
-from pydantic import BaseModel
+from starlette.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+from app.api.v1.api import api_router
+from app.core.config import settings
+from app.models import user
+from database import engine
 
+user.Base.metadata.create_all(bind=engine)
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    version=settings.VERSION,
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+)
 
-class Movie(BaseModel):
-    mid: int
-    genre: str
-    rate: Union[int, float]
-    tag: Optional[str] = None
-    date: Optional[datetime] = None
-    some_variable_list: List[int] = []
+# CORS 미들웨어 설정
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.BACKEND_CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
-
-
-
-tmp_data = {
-    'mid': '1',
-    'genre': 'action',
-    'rate': 9.0,
-    'tag': None,
-    'date': '2024-01-03 00:00:00',
-}
-tmp_movie = Movie(**tmp_data)
-print(tmp_movie)
+app.include_router(api_router, prefix=settings.API_V1_STR)
 
 
 @app.get("/")
 def read_root():
-    return tmp_data
+    return "Hello, World!"

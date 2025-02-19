@@ -1,8 +1,6 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
-from app.schemas.user import User, UserCreate
-from app.db.database import SessionLocal
-from sqlalchemy.orm import Session
+from database import SessionLocal
 
 
 

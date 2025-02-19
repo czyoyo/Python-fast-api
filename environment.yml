@@ -9,10 +9,10 @@ dependencies:
   - python-dotenv
   - pydantic
   - sqlalchemy        # DB ORM을 위한 패키지
+  - python-jose      # JWT 토큰 생성 및 검증
 #  - pydantic-settings # 설정 관리를 위한 패키지
-#  - python-jose      # JWT 토큰 생성 및 검증
-#  - passlib         # 비밀번호 해싱
-#  - bcrypt          # 비밀번호 암호화 알고리즘
+  - passlib         # 비밀번호 해싱 (bcrypt 와 함께 사용)
+  - bcrypt          # 비밀번호 암호화 알고리즘 (passlib 와 함께 사용)
 #  - python-multipart # form-data 처리
 #  - email-validator # 이메일 유효성 검사
 #pip:
@@ -21,6 +21,8 @@ dependencies:
 
 
 # 환경 생성
+
+# uvicorn main:app --reload
 
 # conda env create -f environment.yml
 
