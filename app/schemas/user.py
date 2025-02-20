@@ -3,6 +3,17 @@ from typing import Optional
 
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
 
+class UserResponse(BaseModel):
+  model_config = ConfigDict(from_attributes=True)
+  id: int
+  email: str
+  nickname: str
+  is_active: bool
+  created_at: datetime
+  updated_at: datetime
+
+
+
 
 class UserBase(BaseModel):
     """사용자 정보의 기본 모델"""
@@ -41,9 +52,9 @@ class UserInDBBase(UserBase):
 
   model_config = ConfigDict(from_attributes=True)
 
-class UserResponse(UserInDBBase):
-  """API 응답용 사용자 모델"""
-  pass
+# class UserResponse(UserInDBBase):
+#   """API 응답용 사용자 모델"""
+#   pass
 
 class UserInDB(UserInDBBase):
   """데이터 베이스에 저장되는 사용자 모델"""

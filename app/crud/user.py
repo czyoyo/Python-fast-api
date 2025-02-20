@@ -3,7 +3,7 @@ from typing import Optional
 
 from sqlalchemy.orm import Session
 from app.models.user import User
-from app.schemas.user import UserCreate, UserUpdate
+from app.schemas.user import UserCreate, UserUpdate, UserResponse
 from app.core.security import get_password_hash, verify_password
 
 class UserCRUD:
@@ -31,7 +31,18 @@ class UserCRUD:
     db.add(db_user) # db_user 를 db 에 추가
     db.commit() # db 에 반영
     db.refresh(db_user) # db_user 를 새로고침
-    return db_user
+
+    # 가져온 db_user 를 출력
+    print("db_user 출력:", db_user)
+    for key, value in db_user.__dict__.items():
+      print(key, value)
+
+    # return db_user
+    return UserResponse(
+        email=user.email,
+        nickname=user.nickname,
+    )
+
 
   def update(
       self, db: Session, user_id: int, user_update: UserUpdate
@@ -48,6 +59,8 @@ class UserCRUD:
 
     for key, value in update_data.items():
       setattr(db_user, key, value)
+
+    print("유저 출력:", db_user)
 
     db_user.updated_at = datetime.now(UTC)
     db.commit()

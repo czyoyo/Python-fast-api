@@ -20,18 +20,19 @@ def register(
     db: Annotated[Session, Depends(get_db)]
 ):
   """새로운 사용자 등록"""
-  if user_crud.get_user_by_email(db, email=user_in.email):
-    raise HTTPException(
-        status_code=400,
-        detail="이미 등록된 사용자입니다."
-    )
-  if user_crud.get_user_by_nickname(db, nickname=user_in.nickname):
-    raise HTTPException(
-        status_code=400,
-        detail="이미 사용 중인 닉네임입니다."
-    )
+  # if user_crud.get_user_by_email(db, email=user_in.email):
+  #   raise HTTPException(
+  #       status_code=400,
+  #       detail="이미 등록된 사용자입니다."
+  #   )
+  # if user_crud.get_user_by_nickname(db, nickname=user_in.nickname):
+  #   raise HTTPException(
+  #       status_code=400,
+  #       detail="이미 사용 중인 닉네임입니다."
+  #   )
   try:
     user = user_crud.create_user(db, user_in)
+    print("최종 반환 전 유저 출력", user)
     return user
   except ValueError as e:
     raise HTTPException(
