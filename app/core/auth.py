@@ -43,7 +43,7 @@ async def verify_token_user(
   except (JWTError, ValidationError):
     raise credentials_exception
 
-  user = await user_service.get_user_by_id(user_id=token_payload.sub)
+  user = user_service.get_user_by_id(user_id=token_payload.sub)
   if user is None:
     raise credentials_exception
 
