@@ -4,6 +4,7 @@ from typing import Optional
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
 
 class UserResponse(BaseModel):
+  # from_attributes=True 로 설정하면, 클래스의 속성을 통해 모델을 생성할 수 있습니다.
   model_config = ConfigDict(from_attributes=True)
   id: int
   email: str

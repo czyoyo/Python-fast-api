@@ -37,12 +37,17 @@ class UserCRUD:
     for key, value in db_user.__dict__.items():
       print(key, value)
 
+    return UserResponse.model_validate(db_user.__dict__)
+
     # return db_user
     return UserResponse(
-        email=user.email,
-        nickname=user.nickname,
+        id=db_user.id,
+        email=db_user.email,
+        nickname=db_user.nickname,
+        is_active=db_user.is_active,
+        created_at=db_user.created_at,
+        updated_at=db_user.updated_at
     )
-
 
   def update(
       self, db: Session, user_id: int, user_update: UserUpdate
