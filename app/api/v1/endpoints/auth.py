@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -18,16 +20,14 @@ def test():
 def register(
     user_in: UserCreate,
     auth_service: AuthService = Depends(get_auth_service)
-):
-  print("@@@@@@@@@@@@@@@")
-  """새로운 사용자 등록"""
+) -> UserResponse:
+  """새로운 사용자를 등록합니다."""
   return auth_service.register_user(user_in)
-
 
 @router.post("/login", response_model=Token)
 def login(
-    form_data: OAuth2PasswordRequestForm = Depends(),
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     auth_service: AuthService = Depends(get_auth_service)
-):
+) -> Token:
   """사용자 로그인 및 액세스 토큰 발급"""
   return auth_service.authenticate_user(form_data)

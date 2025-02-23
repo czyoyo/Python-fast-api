@@ -1,4 +1,5 @@
 from typing import Optional
+from datetime import datetime
 
 from pydantic import BaseModel
 
@@ -11,4 +12,6 @@ class Token(BaseModel):
 class TokenPayload(BaseModel):
   sub: Optional[int] = None
   scopes: list[str] = []
+  type: str = "access"
+  exp: Optional[datetime] = None
 
