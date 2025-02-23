@@ -1,18 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
 
-from app.repository.user_repository import UserRepository
+from app.dependencies import get_auth_service
 from app.schemas.token import Token
 from app.schemas.user import UserResponse, UserCreate
 from app.service.auth_service import AuthService
-from database import get_db
 
 router = APIRouter()
 
-def get_auth_service(db: Session = Depends(get_db)) -> AuthService:
-  user_repository = UserRepository(db)
-  return AuthService(user_repository)
+
 
 @router.get('/test')
 def test():
