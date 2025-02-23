@@ -19,7 +19,6 @@ class UserResponse(BaseModel):
 class UserBase(BaseModel):
     """사용자 정보의 기본 모델"""
     email: EmailStr
-    username: str
     is_active: bool = True # 활성화 여부 (기본값: True)
     is_superuser: bool = False # 관리자 여부 (기본값: False)
 
