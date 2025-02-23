@@ -24,6 +24,8 @@ dependencies:
 
 # 환경 생성
 
+# taskkill /F /IM python.exe
+
 # uvicorn main:app --reload
 
 # conda env create -f environment.yml

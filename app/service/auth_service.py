@@ -1,6 +1,7 @@
 from datetime import datetime, UTC, timedelta
 from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import EmailStr
 
 from app.core.config import settings
 from app.core.security import get_password_hash, verify_password, \
@@ -16,7 +17,7 @@ class AuthService:
 
 
   def register_user(self, user_in: UserCreate):
-    if self.user_repository.get_by_email(user_in.email):
+    if self.user_repository.get_by_email(str(user_in.email)):
       raise HTTPException(
           status_code=400,
           detail="이미 등록된 사용자입니다."
@@ -42,8 +43,7 @@ class AuthService:
 
   def authenticate_user(self, form_data: OAuth2PasswordRequestForm):
       user = self.user_repository.get_by_email(form_data.username)
-      if not user or not verify_password(form_data.password,
-                                         user.hashed_password):
+      if not user or not verify_password(form_data.password, str(user.hashed_password)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="잘못된 사용자 이름 또는 비밀번호",
