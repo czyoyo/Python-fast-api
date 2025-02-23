@@ -4,10 +4,10 @@ channels:
   - conda-forge
 dependencies:
   - python=3.12
-  - fastapi>=0.100.0
+  - fastapi>=0.100.0 # pydantic 2.0.0 이상 버전을 사용하기 위해 fastapi 0.100.0 이상 버전을 사용
   - uvicorn
   - python-dotenv
-  - pydantic>=2.0.0
+  - pydantic>=2.0.0 # pydantic 2.0.0 이상 버전을 사용하기 위해 fastapi 0.100.0 이상 버전을 사용
   - sqlalchemy        # DB ORM을 위한 패키지
   - python-jose      # JWT 토큰 생성 및 검증
 #  - pydantic-settings # 설정 관리를 위한 패키지
