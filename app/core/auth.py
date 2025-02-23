@@ -75,6 +75,9 @@ async def get_current_superuser(
 
 
 # 특정 스코프에 대한 의존성 헬퍼 함수들
+# - get_user_with_scopes("users:read")가 호출되어 current_user_with_scopes 함수 반환
+# - current_user_with_scopes에서 SecurityScopes 객체 생성
+# - verify_token_user 호출 시 이 SecurityScopes 객체가 자동으로 전달
 def get_user_with_scopes(*required_scopes: str):
   """주어진 스코프에 대한 권한을 가진 사용자를 반환하는 의존성 함수를 생성합니다."""
 
