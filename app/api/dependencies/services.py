@@ -1,21 +1,21 @@
+# Repository 의존성
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.repository.user_repository import UserRepository
-from app.service.auth_service import AuthService
-from app.service.user_service import UserService
+from app.services.auth_service import AuthService
+from app.services.user_service import UserService
 from database import get_db
 
-
-# Repository 의존성
+# DB 의존성
 def get_user_repository(
-  db: Session = Depends(get_db)
+    db: Session = Depends(get_db)
 ) -> UserRepository:
   return UserRepository(db)
 
 # Service 의존성
 def get_user_service(
-  user_repository: UserRepository = Depends(get_user_repository)
+    user_repository: UserRepository = Depends(get_user_repository)
 ) -> UserService:
   return UserService(user_repository)
 

@@ -8,7 +8,7 @@ from app.core.security import get_password_hash, verify_password, \
 from app.schemas.token import Token
 from app.schemas.user import UserCreate, UserResponse
 from app.models.user import User
-from app.service.user_service import UserService
+from app.services.user_service import UserService
 
 
 class AuthService:
