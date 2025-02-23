@@ -22,6 +22,11 @@ class Settings(BaseSettings):
   ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
   REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
+  # Header keys
+  ACCESS_TOKEN_HEADER: str = "X-Access-Token" # X- 접두사는 사용자 정의 헤더를 나타냅니다.
+  REFRESH_TOKEN_HEADER: str = "X-Refresh-Token"
+
+
   # CORS 설정
   BACKEND_CORS_ORIGINS: list[str] = ["*"]
 
@@ -40,6 +45,7 @@ class Settings(BaseSettings):
 
   class Config: # Pydantic 설정
     case_sensitive = True # 대소문자 구분 ex) name, Name 다름
+    env_file = ".env" # .env 파일명 env 파일의 데이터 로드
 
 settings = Settings()
 
