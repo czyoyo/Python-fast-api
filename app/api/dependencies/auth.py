@@ -7,21 +7,20 @@ from jose import JWTError
 from pydantic import ValidationError
 
 from app.core.security import oauth2_scheme, decode_token, create_access_token
+from app.schemas.token import TokenPayload
 from app.services.user_service import UserService
-from app.models.user import User
 from app.api.dependencies.services import get_user_service
 from app.core.config import settings
 
 
 
 
-async def verify_token_user(
+async def verify_token(
     security_scopes: SecurityScopes,
     token: Annotated[str, Depends(oauth2_scheme)],
     response: Response,
     user_service: UserService = Depends(get_user_service)
-
-) -> User:
+) -> TokenPayload:
   """토큰을 검증하고 해당하는 사용자를 반환합니다."""
   authenticate_value = f'Bearer scope="{security_scopes.scope_str}"'
   credentials_exception = HTTPException(
@@ -36,7 +35,8 @@ async def verify_token_user(
   )
 
   try:
-    token_payload = decode_token(token)
+    payload = decode_token(token)
+    token_payload = TokenPayload.model_validate(payload)
 
     if token_payload.sub is None:
       raise credentials_exception
@@ -55,56 +55,26 @@ async def verify_token_user(
 
   # 새로운 토큰 발급 및 헤더에 설정
   new_token = create_access_token(
-    sub=user.id,
+    sub=token_payload.sub,
     scopes=token_payload.scopes
   )
   response.headers[settings.NEW_ACCESS_TOKEN_HEADER] = new_token
 
-  return user
-
-
-async def get_current_active_user(
-    current_user: Annotated[User, Depends(verify_token_user)]
-) -> User:
-  """현재 활성화된 사용자인지 확인합니다."""
-  if not current_user.is_active:
-    raise HTTPException(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        detail="비활성화된 사용자입니다"
-    )
-  return current_user
-
-
-async def get_current_superuser(
-    current_user: Annotated[User, Depends(verify_token_user)]
-) -> User:
-  """현재 사용자가 관리자 권한을 가지고 있는지 확인합니다."""
-  if not current_user.is_superuser:
-    raise HTTPException(
-        status_code=status.HTTP_403_FORBIDDEN,
-        detail="관리자 권한이 필요합니다"
-    )
-  return current_user
-
+  return token_payload
 
 # 특정 스코프에 대한 의존성 헬퍼 함수들
 # - get_user_with_scopes("users:read")가 호출되어 current_user_with_scopes 함수 반환
 # - current_user_with_scopes에서 SecurityScopes 객체 생성
 # - verify_token_user 호출 시 이 SecurityScopes 객체가 자동으로 전달
 # - ex) @router.get("/users", dependencies=[Depends(get_user_with_scopes("users:read"))])
-def get_user_with_scopes(*required_scopes: str):
-  """주어진 스코프에 대한 권한을 가진 사용자를 반환하는 의존성 함수를 생성합니다."""
+def get_token_with_scopes(*required_scopes: str): # 하위 함수를 정의해서 반환
+  """주어진 스코프에 대한 권한을 검증하는 의존성 함수를 생성합니다."""
 
-  async def current_user_with_scopes(
+  async def verify_scopes( # 반환된 함수를 사용 가능하게 함 (상위 함수의 인자값을 사용해서 만든 함수가 됨)
       security_scopes: SecurityScopes = SecurityScopes(scopes=required_scopes),
-      user: User = Depends(verify_token_user)
-  ) -> User:
-    return user
+      token_payload: TokenPayload = Depends(verify_token)
+  ) -> TokenPayload:
+    return token_payload
 
-  return current_user_with_scopes
+  return verify_scopes
 
-async def get_current_authenticated_user(
-    user: Annotated[User, Depends(verify_token_user)]
-) -> User:
-  """기본 인증된 사용자를 반환합니다."""
-  return user
