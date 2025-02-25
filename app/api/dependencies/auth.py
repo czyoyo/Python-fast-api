@@ -1,21 +1,26 @@
 from typing import Annotated
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Response
 from fastapi.security import SecurityScopes
 
 from jose import JWTError
 from pydantic import ValidationError
 
-from app.core.security import oauth2_scheme, decode_token
+from app.core.security import oauth2_scheme, decode_token, create_access_token
 from app.services.user_service import UserService
 from app.models.user import User
 from app.api.dependencies.services import get_user_service
+from app.core.config import settings
+
+
 
 
 async def verify_token_user(
     security_scopes: SecurityScopes,
     token: Annotated[str, Depends(oauth2_scheme)],
+    response: Response,
     user_service: UserService = Depends(get_user_service)
+
 ) -> User:
   """토큰을 검증하고 해당하는 사용자를 반환합니다."""
   authenticate_value = f'Bearer scope="{security_scopes.scope_str}"'
@@ -30,28 +35,16 @@ async def verify_token_user(
       headers={"WWW-Authenticate": authenticate_value},
   )
 
-
-  print("토큰:", token)
-
-
   try:
-    print("토큰 디코딩")
     token_payload = decode_token(token)
-
-    print("토큰 페이로드:", token_payload)
 
     if token_payload.sub is None:
       raise credentials_exception
-
-
-    print("토큰 페이로드:", token_payload)
 
     # 스코프 검증
     for scope in security_scopes.scopes:
       if scope not in token_payload.scopes:
         raise scope_exception
-
-    print("토큰 페이로드:", token_payload)
 
   except (JWTError, ValidationError):
     raise credentials_exception
@@ -59,6 +52,13 @@ async def verify_token_user(
   user = user_service.get_user_by_id(user_id=token_payload.sub)
   if user is None:
     raise credentials_exception
+
+  # 새로운 토큰 발급 및 헤더에 설정
+  new_token = create_access_token(
+    sub=user.id,
+    scopes=token_payload.scopes
+  )
+  response.headers[settings.NEW_ACCESS_TOKEN_HEADER] = new_token
 
   return user
 

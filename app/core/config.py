@@ -24,6 +24,7 @@ class Settings(BaseSettings):
 
   # Header keys
   ACCESS_TOKEN_HEADER: str = "Authorization"
+  NEW_ACCESS_TOKEN_HEADER: str = "X-New-Access-Token"
   REFRESH_TOKEN_HEADER: str = "X-Refresh-Token"
 
 
