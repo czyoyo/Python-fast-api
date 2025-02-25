@@ -26,7 +26,7 @@ def get_password_hash(password: str) -> str:
   return pwd_context.hash(password)
 
 
-def create_access_token(sub: str, expires_delta: timedelta | None = None,
+def create_access_token(sub: int, expires_delta: timedelta | None = None,
     scopes: list[str] | None = None) -> str:
   """Access 토큰을 생성합니다."""
   if expires_delta:
@@ -34,7 +34,12 @@ def create_access_token(sub: str, expires_delta: timedelta | None = None,
   else:
     expire = datetime.now(UTC) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
 
-  to_encode = {"exp": expire, "sub": sub}
+  # datetime을 int로 변환
+  expire_timestamp = expire.timestamp()
+
+  # sub 값이 str이 아닌 경우 str로 변환
+  to_encode = {"exp": expire_timestamp, "sub": str(sub)}
+
   if scopes:
     to_encode["scopes"] = scopes
 
@@ -45,11 +50,25 @@ def create_access_token(sub: str, expires_delta: timedelta | None = None,
 
 
 def decode_token(token: str) -> TokenPayload:
-  """토큰을 디코딩하고 페이로드를 반환합니다."""
-  payload = jwt.decode(
-      token,
-      settings.SECRET_KEY,
-      algorithms=[settings.ALGORITHM]
-  )
-  return TokenPayload(**payload)
+  try:
+    payload = jwt.decode(
+        token,
+        settings.SECRET_KEY,
+        algorithms=[settings.ALGORITHM]
+    )
+    token_payload = TokenPayload(
+        sub=payload.get("sub"),
+        scopes=payload.get("scopes", [])
+    )
+    return token_payload
+
+  except jwt.JWTError as e:
+    print(f"JWT 디코딩 에러: {str(e)}")
+    raise
+  except Exception as e:
+    print(f"기타 예외 발생: {str(e)}")
+    print(f"예외 타입: {type(e)}")
+    raise
+
+
 

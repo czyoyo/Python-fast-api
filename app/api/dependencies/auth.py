@@ -30,15 +30,28 @@ async def verify_token_user(
       headers={"WWW-Authenticate": authenticate_value},
   )
 
+
+  print("토큰:", token)
+
+
   try:
+    print("토큰 디코딩")
     token_payload = decode_token(token)
+
+    print("토큰 페이로드:", token_payload)
+
     if token_payload.sub is None:
       raise credentials_exception
+
+
+    print("토큰 페이로드:", token_payload)
 
     # 스코프 검증
     for scope in security_scopes.scopes:
       if scope not in token_payload.scopes:
         raise scope_exception
+
+    print("토큰 페이로드:", token_payload)
 
   except (JWTError, ValidationError):
     raise credentials_exception

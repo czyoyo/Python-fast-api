@@ -61,7 +61,7 @@ class AuthService:
     scopes = ["user", "admin"] if user.is_superuser else ["user"]
 
     access_token = create_access_token(
-        sub=str(user.email),
+        sub=int(user.id),
         expires_delta=access_token_expires,
         scopes=scopes
     )

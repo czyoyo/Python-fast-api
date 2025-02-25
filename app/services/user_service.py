@@ -2,11 +2,13 @@ from typing import Optional, List
 
 from app.repository.user_repository import UserRepository
 from app.models.user import User
+from app.schemas.user import UserResponse
 
 
 class UserService:
   def __init__(self, user_repository: UserRepository):
     self.user_repository = user_repository
+
 
   def get_user_by_id(self, user_id: int) -> Optional[User]:
     return self.user_repository.get_by_id(user_id)

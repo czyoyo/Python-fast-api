@@ -17,13 +17,13 @@ class Settings(BaseSettings):
   VERSION: str = "1.0.0" # 프로젝트 버전
 
   # JWT 설정
-  SECRET_KEY: str = secrets.token_urlsafe(32) # secrets.token_urlsafe() 를 사용해 랜덤한 문자열 생성
+  SECRET_KEY: str = "my_very_secret_key_abcd_efg" # JWT 암호화 키
   ALGORITHM: str = "HS256"
   ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
   REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
   # Header keys
-  ACCESS_TOKEN_HEADER: str = "X-Access-Token" # X- 접두사는 사용자 정의 헤더를 나타냅니다.
+  ACCESS_TOKEN_HEADER: str = "Authorization"
   REFRESH_TOKEN_HEADER: str = "X-Refresh-Token"
 
 
