@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.api.dependencies.services import get_auth_service
+from app.schemas.common import CommonResponse
 from app.schemas.token import Token
 from app.schemas.user import UserResponse, UserCreate
 from app.services.auth_service import AuthService
@@ -16,7 +17,7 @@ router = APIRouter()
 def test():
   return {"test": "test"}
 
-@router.post("/register", response_model=UserResponse)
+@router.post("/register", response_model=CommonResponse[UserResponse])
 def register(
     user_in: UserCreate,
     auth_service: AuthService = Depends(get_auth_service)
@@ -24,7 +25,7 @@ def register(
   """새로운 사용자를 등록합니다."""
   return auth_service.register_user(user_in)
 
-@router.post("/login", response_model=Token)
+@router.post("/login", response_model=CommonResponse[Token])
 def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     auth_service: AuthService = Depends(get_auth_service)
