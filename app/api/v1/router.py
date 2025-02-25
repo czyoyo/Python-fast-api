@@ -1,8 +1,7 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from .endpoints import auth, users
-from ...middlewares.response import wrap_response
 
-api_router = APIRouter(dependencies=[Depends(wrap_response())])
+api_router = APIRouter()
 
 # prefix="/auth"로 설정된 라우터를 auth 라우터로 설정
 # /auth/login, /auth/register 등의 경로로 접근 가능

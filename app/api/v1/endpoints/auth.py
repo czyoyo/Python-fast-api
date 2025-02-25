@@ -17,7 +17,7 @@ router = APIRouter()
 def test():
   return {"test": "test"}
 
-@router.post("/register", response_model=CommonResponse[UserResponse])
+@router.post("/register", response_model=UserResponse)
 def register(
     user_in: UserCreate,
     auth_service: AuthService = Depends(get_auth_service)
@@ -25,7 +25,7 @@ def register(
   """새로운 사용자를 등록합니다."""
   return auth_service.register_user(user_in)
 
-@router.post("/login", response_model=CommonResponse[Token])
+@router.post("/login", response_model=Token)
 def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     auth_service: AuthService = Depends(get_auth_service)
