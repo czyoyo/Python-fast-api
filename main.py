@@ -13,6 +13,7 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
 )
 
+
 # CORS 미들웨어 설정
 # app.add_middleware(
 #     CORSMiddleware,
